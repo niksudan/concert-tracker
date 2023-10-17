@@ -2,6 +2,11 @@
 
 A website for tracking concerts of your favourite artists.
 
+## Installation
+
+- `yarn`
+- `yarn dlx @yarnpkg/sdks vscode`
+
 ## Commands
 
 - `yarn dev` - Run development server

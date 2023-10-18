@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db": "ts-node ./db"
+    "db": "rm -rf ./database.db && ts-node ./db"
   },
   "dependencies": {
     "bulma": "^0.9.4",

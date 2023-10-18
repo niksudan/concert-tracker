@@ -52,7 +52,7 @@ export default async function handler(
       `http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=${process.env.LASTFM_API_KEY}&user=${process.env.LASTFM_USER_ID}&format=json&limit=250`,
       {
         headers: {
-          'User-Agent': 'com.niksudan.concert-tracker/0.1.0',
+          'User-Agent': 'com.niksudan.concert-tracker/1.0.0',
         },
       },
     );

@@ -40,6 +40,7 @@ async function getSetlistFmConcertsAttended(page?: number): Promise<{
     }/attended?p=${page || 1}`,
     {
       headers: {
+        'User-Agent': 'com.niksudan.concert-tracker/0.1.0',
         Accept: 'application/json',
         'x-api-key': process.env.SETLISTFM_API_KEY!,
       },

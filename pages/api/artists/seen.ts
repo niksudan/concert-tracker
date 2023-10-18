@@ -4,8 +4,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import fetch from 'node-fetch';
 import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
+import { Artist } from '@/types/Artist';
 
-type ResponseData = { message: string | string[] };
+type ResponseData = { message: string | Artist[] };
 
 type Setlist = {
   id: string;
@@ -30,7 +31,7 @@ let db: Database | null = null;
 async function getSetlistFmConcertsAttended(page?: number): Promise<{
   ok: boolean;
   status: number;
-  artists: string[];
+  artists: Artist[];
   total: number;
   itemsPerPage: number;
 }> {
@@ -58,7 +59,10 @@ async function getSetlistFmConcertsAttended(page?: number): Promise<{
   }
 
   const data = (await response.json()) as SetlistFmResponse;
-  const artists = data.setlist.map((setlist) => setlist.artist.name);
+  const artists: Artist[] = data.setlist.map((setlist) => ({
+    name: setlist.artist.name,
+    mbid: setlist.artist.mbid,
+  }));
 
   return {
     ok: true,
@@ -83,20 +87,14 @@ export default async function handler(
     }
 
     // Load cache and render it, if applicable
-    const cache = await db.all('SELECT * FROM artists_seen');
+    const cache = (await db.all('SELECT * FROM artists_seen')) as Artist[];
     if (cache.length) {
-      console.log(`Using cached result (${cache.length} artists)`);
-      return res
-        .status(200)
-        .json({ message: cache.map((artist) => artist.name) });
+      return res.status(200).json({ message: cache });
     }
 
     // Determine total number of artists to load
     let currentPage = 1;
     let { artists, total } = await getSetlistFmConcertsAttended(currentPage);
-    console.log(
-      `Loaded ${artists.length} of ${total} artists... (Page ${currentPage})`,
-    );
 
     // Slowly load all artists seen, page by page
     while (artists.length < total) {
@@ -106,23 +104,29 @@ export default async function handler(
         return res
           .status(response.status)
           .json({ message: `Error ${response.status}` });
-        break;
       }
-      artists.push(...response.artists);
-      console.log(
-        `Loaded ${artists.length} of ${total} artists... (Page ${currentPage})`,
-      );
+
+      // Make sure artists you've seen twice aren't added twice
+      for (const newArtist of response.artists) {
+        if (artists.some((artist) => artist.mbid !== newArtist.mbid)) {
+          artists.push(newArtist);
+        }
+      }
       await sleep(1000); // Setlist.fm has a sensitive rate limit
     }
 
-    // Filter out artists you may have seen twice
-    artists = uniqueArray(artists);
+    // Process response
+    artists = artists.map(
+      (artist): Artist => ({
+        mbid: artist.mbid,
+        name: artist.name,
+      }),
+    );
 
     // Cache the results
-    const query = `INSERT INTO artists_seen (name) VALUES ${artists.map(
-      (artist, index) => `("${artist}") `,
+    const query = `INSERT INTO artists_seen (mbid, name) VALUES ${artists.map(
+      (artist) => `("${artist.mbid}", "${artist.name}") `,
     )}`;
-    console.log(query);
     db.run(query);
 
     // Render result

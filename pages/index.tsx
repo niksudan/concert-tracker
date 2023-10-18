@@ -33,17 +33,19 @@ export default function Home() {
     <>
       <Hero>Concert Tracker</Hero>
       <Section>
-        <div className="columns">
-          <div className="column">
-            <h2>Top Artists</h2>
+        <div className="columns is-centered">
+          <div className="column is-half">
+            <h2>My Artists</h2>
             {topArtists.map((artist, index) => (
-              <ArtistCard key={index} artist={artist} />
-            ))}
-          </div>
-          <div className="column">
-            <h2>Seen Artists</h2>
-            {seenArtists.map((artist, index) => (
-              <ArtistCard key={index} artist={artist} />
+              <ArtistCard
+                key={index}
+                artist={artist}
+                hasSeen={seenArtists.some(
+                  (seenArtist) =>
+                    seenArtist.name === artist.name ||
+                    (!!seenArtist.mbid && seenArtist.mbid == artist.mbid),
+                )}
+              />
             ))}
           </div>
         </div>

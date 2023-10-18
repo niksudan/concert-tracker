@@ -1,8 +1,4 @@
-// @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display&display=swap');
-
-// $family-sans-serif: 'Open Sans', sans-serif;
-// $family-serif: 'Playfair Display', serif;
-// $primary: #fabc3d;
+$primary: #75bde0;
 
 @import '~bulma/bulma';
 
@@ -15,12 +11,3 @@ body {
 * {
   box-sizing: border-box;
 }
-
-// h1,
-// h2,
-// h3,
-// h4,
-// h5,
-// h6 {
-//   font-family: $family-serif;
-// }

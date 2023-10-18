@@ -59,42 +59,43 @@ export default function Home() {
     }
   }, [filter, isArtistSeen, topArtists]);
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+  const content = (
+    <>
+      <div className="columns is-mobile">
+        <div className="column">
+          <h2>My Artists</h2>
+        </div>
+        <div className="column">
+          <div className="buttons has-addons is-right">
+            <Button onClick={() => setFilter(0)} active={filter === 0}>
+              All
+            </Button>
+            <Button onClick={() => setFilter(1)} active={filter === 1}>
+              Seen
+            </Button>
+            <Button onClick={() => setFilter(2)} active={filter === 2}>
+              Not Seen
+            </Button>
+          </div>
+        </div>
+      </div>
+      {artists.map((artist, index) => (
+        <ArtistCard
+          key={index}
+          artist={artist}
+          hasSeen={isArtistSeen(artist)}
+        />
+      ))}
+    </>
+  );
 
   return (
     <>
-      <Hero>Concert Tracker</Hero>
+      <Hero>🎸 Concert Tracker</Hero>
       <Section>
         <div className="columns is-centered">
           <div className="column is-two-thirds-widescreen">
-            <div className="columns is-mobile">
-              <div className="column">
-                <h2>My Artists</h2>
-              </div>
-              <div className="column">
-                <div className="buttons has-addons is-right">
-                  <Button onClick={() => setFilter(0)} active={filter === 0}>
-                    All
-                  </Button>
-                  <Button onClick={() => setFilter(1)} active={filter === 1}>
-                    Seen
-                  </Button>
-                  <Button onClick={() => setFilter(2)} active={filter === 2}>
-                    Not Seen
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {artists.map((artist, index) => (
-              <ArtistCard
-                key={index}
-                artist={artist}
-                hasSeen={isArtistSeen(artist)}
-              />
-            ))}
+            {isLoading ? <p>Loading... please wait</p> : content}
           </div>
         </div>
       </Section>

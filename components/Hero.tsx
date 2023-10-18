@@ -5,7 +5,7 @@ interface Props {
 }
 
 export const Hero = ({ children }: Props) => (
-  <section className="hero is-primary">
+  <section className="hero is-primary is-medium" style={{}}>
     <div className="hero-body">
       <div className="container">
         <h1 className="title">{children}</h1>

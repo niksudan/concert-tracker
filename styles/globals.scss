@@ -1,4 +1,4 @@
-$primary: #75bde0;
+$primary: #393e46;
 
 @import '~bulma/bulma';
 
@@ -10,4 +10,12 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+.hero {
+  background-image: url('/banner.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: soft-light;
 }

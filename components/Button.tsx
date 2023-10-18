@@ -8,7 +8,7 @@ interface Props {
 
 export const Button = ({ children, active = false, onClick }: Props) => (
   <a
-    className={`button is-responsive${active ? ' is-primary is-light' : ''}`}
+    className={`button is-responsive${active ? ' is-primary' : ''}`}
     onClick={onClick}
   >
     {children}

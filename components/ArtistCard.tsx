@@ -25,11 +25,23 @@ export const ArtistCard = ({ artist, hasSeen }: Props) => (
           <p>
             <strong>{artist.name}</strong>
           </p>
-          <p>
-            {hasSeen
-              ? "You've seen this artist live!"
-              : "You haven't seen this artist live"}
-          </p>
+          {hasSeen ? (
+            <p>You&apos;ve seen this artist live!</p>
+          ) : (
+            <>
+              <p>You haven&apos;t seen this artist live yet</p>
+              <a
+                className="button"
+                target="_blank"
+                rel="noopener"
+                href={`https://www.songkick.com/search?query=${encodeURIComponent(
+                  artist.name,
+                )}&type=upcoming`}
+              >
+                View concerts
+              </a>
+            </>
+          )}
         </div>
         {!!artist.playcount && (
           <div className="media-right">

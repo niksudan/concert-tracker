@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 import { Artist } from '@/types/Artist';
-import sqlEscapeString from '@/lib/sqlEscapeString';
+import sqliteEscapeString from '@/lib/sqliteEscapeString';
 
 type ResponseData = { message: string | Artist[] };
 
@@ -73,9 +73,9 @@ export default async function handler(
     // Cache the results
     const query = `INSERT INTO artists_top (mbid, name, playcount) VALUES ${artists.map(
       (artist) =>
-        `("${sqlEscapeString(artist.mbid)}", "${sqlEscapeString(
+        `('${sqliteEscapeString(artist.mbid)}', '${sqliteEscapeString(
           artist.name,
-        )}", ${artist.playcount}) `,
+        )}', ${artist.playcount}) `,
     )}`;
     db.run(query);
 

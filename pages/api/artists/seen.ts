@@ -1,5 +1,5 @@
 import sleep from '@/lib/sleep';
-import sqlEscapeString from '@/lib/sqlEscapeString';
+import sqliteEscapeString from '@/lib/sqliteEscapeString';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import fetch from 'node-fetch';
 import sqlite3 from 'sqlite3';
@@ -126,9 +126,9 @@ export default async function handler(
     // Cache the results
     const query = `INSERT INTO artists_seen (mbid, name) VALUES ${artists.map(
       (artist) =>
-        `("${sqlEscapeString(artist.mbid)}", "${sqlEscapeString(
+        `('${sqliteEscapeString(artist.mbid)}', '${sqliteEscapeString(
           artist.name,
-        )}") `,
+        )}') `,
     )}`;
     db.run(query);
 

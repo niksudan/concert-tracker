@@ -60,7 +60,7 @@ export default function Home() {
   }, [filter, isArtistSeen, topArtists]);
 
   if (isLoading) {
-    return null;
+    return <p>Loading...</p>;
   }
 
   return (
@@ -68,13 +68,13 @@ export default function Home() {
       <Hero>Concert Tracker</Hero>
       <Section>
         <div className="columns is-centered">
-          <div className="column is-half">
-            <div className="columns">
+          <div className="column is-two-thirds-widescreen">
+            <div className="columns is-mobile">
               <div className="column">
                 <h2>My Artists</h2>
               </div>
               <div className="column">
-                <div className="buttons is-right">
+                <div className="buttons has-addons is-right">
                   <Button onClick={() => setFilter(0)} active={filter === 0}>
                     All
                   </Button>

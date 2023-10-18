@@ -2,6 +2,8 @@ import sleep from '@/lib/sleep';
 import uniqueArray from '@/lib/unique-array';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import fetch from 'node-fetch';
+import sqlite3 from 'sqlite3';
+import { open, Database } from 'sqlite';
 
 type ResponseData = { message: string | string[] };
 
@@ -22,6 +24,8 @@ type SetlistFmResponse = {
   total: number;
   setlist: Setlist[];
 };
+
+let db: Database | null = null;
 
 async function getSetlistFmConcertsAttended(page?: number): Promise<{
   ok: boolean;
@@ -68,33 +72,60 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>,
 ) {
-  let currentPage = 1;
-
   try {
-    const { artists, total } = await getSetlistFmConcertsAttended(currentPage);
+    // Connect to DB
+    if (!db) {
+      db = await open({
+        filename: './database.db',
+        driver: sqlite3.Database,
+      });
+    }
 
+    // Load cache and render it, if applicable
+    const cache = await db.all('SELECT * FROM artists_seen');
+    if (cache.length) {
+      console.log(`Using cached result (${cache.length} artists)`);
+      return res
+        .status(200)
+        .json({ message: cache.map((artist) => artist.name) });
+    }
+
+    // Determine total number of artists to load
+    let currentPage = 1;
+    let { artists, total } = await getSetlistFmConcertsAttended(currentPage);
     console.log(
       `Loaded ${artists.length} of ${total} artists... (Page ${currentPage})`,
     );
 
+    // Slowly load all artists seen, page by page
     while (artists.length < total) {
       currentPage++;
       const response = await getSetlistFmConcertsAttended(currentPage);
       if (!response.ok) {
-        res
+        return res
           .status(response.status)
           .json({ message: `Error ${response.status}` });
         break;
       }
-
       artists.push(...response.artists);
       console.log(
         `Loaded ${artists.length} of ${total} artists... (Page ${currentPage})`,
       );
-      await sleep(1000);
+      await sleep(1000); // Setlist.fm has a sensitive rate limit
     }
 
-    res.status(200).json({ message: uniqueArray(artists) });
+    // Filter out artists you may have seen twice
+    artists = uniqueArray(artists);
+
+    // Cache the results
+    const query = `INSERT INTO artists_seen (name) VALUES ${artists.map(
+      (artist, index) => `("${artist}") `,
+    )}`;
+    console.log(query);
+    db.run(query);
+
+    // Render result
+    res.status(200).json({ message: artists });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: 'Internal error' });

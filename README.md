@@ -13,3 +13,4 @@ A website for tracking concerts of your favourite artists.
 - `yarn build` - Compile website for production
 - `yarn start` - Run production server
 - `yarn lint` - Lint project
+- `yarn db` - Run database setup

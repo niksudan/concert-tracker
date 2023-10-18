@@ -1,6 +1,6 @@
-# Concert Tracker
+# 🎵 Concert Tracker
 
-A website for tracking concerts of your favourite artists.
+A website to figure out which of your top artists you've not seen live
 
 ## Installation
 

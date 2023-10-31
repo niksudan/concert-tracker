@@ -94,7 +94,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {artists.map((artist, index) => (
+      {filteredArtists.map((artist, index) => (
         <ArtistCard
           key={index}
           artist={artist}

@@ -33,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:18.2.13"],\
             ["autoprefixer", "virtual:e09940c866f6e776fcec6091dbd31e56153b611b714fd6c5d44e45a1f2598e53e1bce97beef9b492445648913b2eea4572194227b5e79ed3604084b6e7cb9538#npm:10.4.16"],\
             ["bulma", "npm:0.9.4"],\
+            ["date-fns", "npm:2.30.0"],\
             ["eslint", "npm:8.51.0"],\
             ["eslint-config-next", "virtual:e09940c866f6e776fcec6091dbd31e56153b611b714fd6c5d44e45a1f2598e53e1bce97beef9b492445648913b2eea4572194227b5e79ed3604084b6e7cb9538#npm:13.5.4"],\
             ["next", "virtual:e09940c866f6e776fcec6091dbd31e56153b611b714fd6c5d44e45a1f2598e53e1bce97beef9b492445648913b2eea4572194227b5e79ed3604084b6e7cb9538#npm:13.5.4"],\
@@ -1267,6 +1268,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:18.2.13"],\
             ["autoprefixer", "virtual:e09940c866f6e776fcec6091dbd31e56153b611b714fd6c5d44e45a1f2598e53e1bce97beef9b492445648913b2eea4572194227b5e79ed3604084b6e7cb9538#npm:10.4.16"],\
             ["bulma", "npm:0.9.4"],\
+            ["date-fns", "npm:2.30.0"],\
             ["eslint", "npm:8.51.0"],\
             ["eslint-config-next", "virtual:e09940c866f6e776fcec6091dbd31e56153b611b714fd6c5d44e45a1f2598e53e1bce97beef9b492445648913b2eea4572194227b5e79ed3604084b6e7cb9538#npm:13.5.4"],\
             ["next", "virtual:e09940c866f6e776fcec6091dbd31e56153b611b714fd6c5d44e45a1f2598e53e1bce97beef9b492445648913b2eea4572194227b5e79ed3604084b6e7cb9538#npm:13.5.4"],\
@@ -1336,6 +1338,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/data-uri-to-buffer-npm-4.0.1-5c66a78beb-0d0790b67f.zip/node_modules/data-uri-to-buffer/",\
           "packageDependencies": [\
             ["data-uri-to-buffer", "npm:4.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["date-fns", [\
+        ["npm:2.30.0", {\
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.30.0-895c790e0f-f7be015232.zip/node_modules/date-fns/",\
+          "packageDependencies": [\
+            ["date-fns", "npm:2.30.0"],\
+            ["@babel/runtime", "npm:7.23.2"]\
           ],\
           "linkType": "HARD"\
         }]\

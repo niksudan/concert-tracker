@@ -7,36 +7,51 @@ import { useState, useEffect, useCallback } from 'react';
 
 export default function Home() {
   const [isLoading, setLoading] = useState(true);
-  const [seenArtists, setSeenArtists] = useState<Artist[]>([]);
-  const [topArtists, setTopArtists] = useState<Artist[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
+  const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
   const [filter, setFilter] = useState(0);
 
+  /**
+   * Load an API route
+   *
+   * @param url URL to load
+   * @returns Artist[]
+   */
   const loadApiRoute = async (url: string): Promise<{ message: Artist[] }> => {
     const response = await fetch(url);
     return await response.json();
   };
 
+  /**
+   * Determine if an artist has been seen
+   */
   const isArtistSeen = useCallback(
-    (artist: Artist) => {
-      return seenArtists.some(
-        (seenArtist) =>
-          seenArtist.name === artist.name ||
-          (!!seenArtist.mbid && seenArtist.mbid == artist.mbid),
-      );
-    },
-    [seenArtists],
+    (artist: Artist) => !!artist.lastSeenDate,
+    [],
   );
 
   /**
-   * Load initial data
+   * Load and process initial data
    */
   useEffect(() => {
-    loadApiRoute(`/api/artists/seen`).then((data) => {
-      setSeenArtists(data.message);
-      loadApiRoute(`/api/artists/top`).then((data) => {
-        setTopArtists(data.message);
-        setArtists(data.message);
+    loadApiRoute(`/api/artists/seen`).then((seenArtistsPayload) => {
+      loadApiRoute(`/api/artists/top`).then((topArtistsPayload) => {
+        const seenArtists = seenArtistsPayload.message;
+        const topArtists = topArtistsPayload.message;
+
+        const processedArtists = [];
+        for (const artist of topArtists) {
+          const { lastSeenDate, lastSeenVenue } =
+            seenArtists.find((a) => a.mbid === artist.mbid) || {};
+          processedArtists.push({
+            ...artist,
+            lastSeenVenue,
+            lastSeenDate,
+          });
+        }
+
+        setArtists(processedArtists);
+        setFilteredArtists(processedArtists);
         setLoading(false);
       });
     });
@@ -48,16 +63,16 @@ export default function Home() {
   useEffect(() => {
     switch (filter) {
       case 0:
-        setArtists(topArtists);
+        setFilteredArtists(artists);
         break;
       case 1:
-        setArtists(topArtists.filter((artist) => isArtistSeen(artist)));
+        setFilteredArtists(artists.filter((artist) => isArtistSeen(artist)));
         break;
       case 2:
-        setArtists(topArtists.filter((artist) => !isArtistSeen(artist)));
+        setFilteredArtists(artists.filter((artist) => !isArtistSeen(artist)));
         break;
     }
-  }, [filter, isArtistSeen, topArtists]);
+  }, [artists, filter, isArtistSeen]);
 
   const content = (
     <>

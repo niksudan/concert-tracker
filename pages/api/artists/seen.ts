@@ -16,6 +16,10 @@ type Setlist = {
     name: string;
     sortName: string;
   };
+  venue: {
+    id: string;
+    name: string;
+  };
 };
 
 type SetlistFmResponse = {
@@ -62,6 +66,8 @@ async function getSetlistFmConcertsAttended(page?: number): Promise<{
   const artists: Artist[] = data.setlist.map((setlist) => ({
     name: setlist.artist.name,
     mbid: setlist.artist.mbid,
+    lastSeenDate: setlist.eventDate,
+    lastSeenVenue: setlist.venue.name,
   }));
 
   return {
@@ -123,15 +129,20 @@ export default async function handler(
       (artist): Artist => ({
         mbid: artist.mbid,
         name: artist.name,
+        lastSeenDate: artist.lastSeenDate,
+        lastSeenVenue: artist.lastSeenVenue,
       }),
     );
 
     // Cache the results
-    const query = `INSERT INTO artists_seen (mbid, name) VALUES ${artists.map(
+    const query = `INSERT INTO artists_seen (mbid, name, lastSeenDate, lastSeenVenue) VALUES ${artists.map(
       (artist) =>
-        `('${sqliteEscapeString(artist.mbid)}', '${sqliteEscapeString(
-          artist.name,
-        )}') `,
+        `(
+          '${sqliteEscapeString(artist.mbid)}',
+          '${sqliteEscapeString(artist.name)}',
+          '${sqliteEscapeString(artist.lastSeenDate || '')}',
+          '${sqliteEscapeString(artist.lastSeenVenue || '')}'
+        ) `,
     )}`;
     db.run(query);
 

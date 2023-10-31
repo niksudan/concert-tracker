@@ -86,9 +86,12 @@ export default async function handler(
       });
     }
 
+    // Check for query param to bypass cache check
+    const refreshCache = req.query['refresh'] === 'true';
+
     // Load cache and render it, if applicable
     const cache = (await db.all('SELECT * FROM artists_seen')) as Artist[];
-    if (cache.length) {
+    if (cache.length && !refreshCache) {
       return res.status(200).json({ message: cache });
     }
 

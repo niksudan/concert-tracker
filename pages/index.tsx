@@ -42,7 +42,9 @@ export default function Home() {
         const processedArtists = [];
         for (const topArtist of topArtists) {
           const seenArtist =
-            seenArtists.find((a) => a.mbid === topArtist.mbid) || {};
+            seenArtists.find(
+              (a) => a.mbid === topArtist.mbid || a.name === topArtist.name,
+            ) || {};
           processedArtists.push({
             ...topArtist,
             ...seenArtist,

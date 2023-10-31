@@ -8,7 +8,9 @@ db.run(`
     name TEXT NOT NULL,
     mbid TEXT NOT NULL,
     lastSeenDate TEXT,
-    lastSeenVenue TEXT
+    lastSeenVenue TEXT,
+    lastSeenCity TEXT,
+    lastSeenCountry TEXT
   )
 `);
 

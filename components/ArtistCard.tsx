@@ -2,6 +2,7 @@ import { Artist } from '@/types/Artist';
 import Image from 'next/image';
 import React from 'react';
 import { format } from 'date-fns';
+import { getFlagEmoji } from '@/lib/getFlagEmoji';
 
 interface Props {
   artist: Artist;
@@ -33,18 +34,35 @@ export const ArtistCard = ({ artist, hasSeen }: Props) => {
             <p>
               <strong>{artist.name}</strong>
             </p>
-            {artist.lastSeenDate}
             {hasSeen ? (
               <>
                 <p>You&apos;ve seen this artist live!</p>
-                {artist.lastSeenVenue && artist.lastSeenDate && (
-                  <p>
-                    <small>
-                      Last seen at <strong>{artist.lastSeenVenue}</strong> on{' '}
-                      {formatDate(artist.lastSeenDate)}
-                    </small>
-                  </p>
-                )}
+                {artist.lastSeenVenue &&
+                  artist.lastSeenDate &&
+                  artist.lastSeenCity &&
+                  artist.lastSeenCountry && (
+                    <div className="media">
+                      <div className="media-left">
+                        <p className="is-size-4">
+                          {getFlagEmoji(artist.lastSeenCountry)}
+                        </p>
+                      </div>
+                      <div
+                        className="media-content is-flex is-align-items-center"
+                        style={{ minHeight: 36 }}
+                      >
+                        <p>
+                          <small>
+                            Last seen at{' '}
+                            <strong>
+                              {artist.lastSeenVenue}, {artist.lastSeenCity}
+                            </strong>{' '}
+                            on {formatDate(artist.lastSeenDate)}
+                          </small>
+                        </p>
+                      </div>
+                    </div>
+                  )}
               </>
             ) : (
               <>

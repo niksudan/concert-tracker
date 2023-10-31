@@ -40,13 +40,12 @@ export default function Home() {
         const topArtists = topArtistsPayload.message;
 
         const processedArtists = [];
-        for (const artist of topArtists) {
-          const { lastSeenDate, lastSeenVenue } =
-            seenArtists.find((a) => a.mbid === artist.mbid) || {};
+        for (const topArtist of topArtists) {
+          const seenArtist =
+            seenArtists.find((a) => a.mbid === topArtist.mbid) || {};
           processedArtists.push({
-            ...artist,
-            lastSeenVenue,
-            lastSeenDate,
+            ...topArtist,
+            ...seenArtist,
           });
         }
 

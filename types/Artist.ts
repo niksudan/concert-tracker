@@ -4,4 +4,6 @@ export type Artist = {
   playcount?: number;
   lastSeenDate?: string;
   lastSeenVenue?: string;
+  lastSeenCity?: string;
+  lastSeenCountry?: string;
 };

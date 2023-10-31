@@ -19,6 +19,13 @@ type Setlist = {
   venue: {
     id: string;
     name: string;
+    city: {
+      name: string;
+      country: {
+        code: string;
+        name: string;
+      };
+    };
   };
 };
 
@@ -68,6 +75,8 @@ async function getSetlistFmConcertsAttended(page?: number): Promise<{
     mbid: setlist.artist.mbid,
     lastSeenDate: setlist.eventDate,
     lastSeenVenue: setlist.venue.name,
+    lastSeenCity: setlist.venue.city.name,
+    lastSeenCountry: setlist.venue.city.country.code,
   }));
 
   return {
@@ -131,17 +140,21 @@ export default async function handler(
         name: artist.name,
         lastSeenDate: artist.lastSeenDate,
         lastSeenVenue: artist.lastSeenVenue,
+        lastSeenCity: artist.lastSeenCity,
+        lastSeenCountry: artist.lastSeenCountry,
       }),
     );
 
     // Cache the results
-    const query = `INSERT INTO artists_seen (mbid, name, lastSeenDate, lastSeenVenue) VALUES ${artists.map(
+    const query = `INSERT INTO artists_seen (mbid, name, lastSeenDate, lastSeenVenue, lastSeenCity, lastSeenCountry) VALUES ${artists.map(
       (artist) =>
         `(
           '${sqliteEscapeString(artist.mbid)}',
           '${sqliteEscapeString(artist.name)}',
           '${sqliteEscapeString(artist.lastSeenDate || '')}',
-          '${sqliteEscapeString(artist.lastSeenVenue || '')}'
+          '${sqliteEscapeString(artist.lastSeenVenue || '')}',
+          '${sqliteEscapeString(artist.lastSeenCity || '')}',
+          '${sqliteEscapeString(artist.lastSeenCountry || '')}'
         ) `,
     )}`;
     db.run(query);
